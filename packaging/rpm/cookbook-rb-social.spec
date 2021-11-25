@@ -3,7 +3,7 @@ Version:  %{__version}
 Release:  %{__release}%{?dist}
 
 License:  GNU AGPLv3
-URL:  https://github.com/redBorder/rb-social
+URL:  https://github.com/redBorder/cookbook-rb-social
 Source0: %{name}-%{version}.tar.gz
 
 BuildRequires: maven java-devel
@@ -46,5 +46,5 @@ exit 0
 /usr/lib/systemd/system/rb-social.service
 
 %changelog
-* Tue Jun 14 2016 Carlos J. Mateos  <cjmateos@redborder.com> - 1.0.0-1
+* Thu Nov 25 2021 Vicente Mesa <vimesa@redborder.com> & Eduardo Reyes <eareyes@redborder.com>- 0.0.1
 - first spec version
