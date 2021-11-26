@@ -8,8 +8,7 @@ Source0: %{name}-%{version}.tar.gz
 
 BuildRequires: maven java-devel
 
-Summary: redborder social module
-Group: Services/Monitoring
+Summary: social  cookbook to install and configure it in redborder environments
 Requires: java
 
 %description
@@ -19,32 +18,37 @@ Requires: java
 %setup -qn %{name}-%{version}
 
 %build
-export MAVEN_OPTS="-Xmx512m -Xms256m -Xss10m -XX:MaxPermSize=512m" && mvn clean package
 
 %install
-mkdir -p %{buildroot}/usr/lib/%{name}
-install -D -m 644 target/rb-social-*-selfcontained.jar %{buildroot}/usr/lib/%{name}
-mv %{buildroot}/usr/lib/%{name}/rb-social-*-selfcontained.jar %{buildroot}/usr/lib/%{name}/rb-social.jar
-install -D -m 644 rb-social.service %{buildroot}/usr/lib/systemd/system/rb-social.service
+mkdir -p %{buildroot}/var/chef/cookbooks/rb-social
+mkdir -p %{buildroot}/usr/lib64/rb-social
 
-%clean
-rm -rf %{buildroot}
+cp -f -r  resources/* %{buildroot}/var/chef/cookbooks/rb-social/
+chmod -R 0755 %{buildroot}/var/chef/cookbooks/rb-social
+install -D -m 0644 README.md %{buildroot}/var/chef/cookbooks/rb-social/README.md
 
 %pre
-getent group %{name} >/dev/null || groupadd -r %{name}
-getent passwd %{name} >/dev/null || \
-    useradd -r -g %{name} -d / -s /sbin/nologin \
-    -c "User of %{name} service" %{name}
-exit 0
 
-%post -p /sbin/ldconfig
-%postun -p /sbin/ldconfig
+%post
+case "$1" in
+  1)
+    # This is an initial install.
+    :
+  ;;
+  2)
+    # This is an upgrade.
+    su - -s /bin/bash -c 'source /etc/profile && rvm gemset use default && env knife cookbook upload rb-social'
+  ;;
+esac
 
 %files
-%defattr(644,root,root)
-/usr/lib/%{name}
-/usr/lib/systemd/system/rb-social.service
+%defattr(0755,root,root)
+/var/chef/cookbooks/rb-social
+%defattr(0644,root,root)
+/var/chef/cookbooks/rb-social/README.md
+
+%doc
 
 %changelog
-* Thu Nov 25 2021 Vicente Mesa <vimesa@redborder.com> & Eduardo Reyes <eareyes@redborder.com>- 0.0.1
+* Fri Nov 26 2021 Vicente Mesa <vimesa@redborder.com> & Eduardo Reyes <eareyes@redborder.com>- 0.0.1
 - first spec version

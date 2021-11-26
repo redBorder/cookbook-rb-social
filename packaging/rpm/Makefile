@@ -32,9 +32,10 @@ srpm: build_prepare
 		--define "__release $(BUILD_NUMBER)" \
 		--resultdir=$(RESULT_DIR) \
 		--buildsrpm \
-		--spec=rb-social.spec \
+		--spec=${PACKAGE_NAME}.spec \
 		--sources=SOURCES
 	@echo "======= Source RPM now available in $(RESULT_DIR) ======="
+
 
 rpm: srpm
 	/usr/bin/mock \

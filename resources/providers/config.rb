@@ -6,58 +6,48 @@
 action :add do
   begin
     config_dir = new_resource.config_dir
-    kafka_topic = new_resource.kafka_topic
-    hostname = new_resource.name
-    hostip = new_resource.ip
-    community = new_resource.community
-    log_level = new_resource.log_level
-    user = "redborder-social"
+    user = new.resource.user
 
     yum_package "redborder-social" do
       action :upgrade
+      flush_cache[:before]
     end
-
-
-    #Installation of required utilities ¿Is it necessary?
-    utilities = [ "bc", "net-snmp-utils", "fping" ]
-    utilities.each { |utility|
-      yum_package utility do
-        action :upgrade
-      end
-    }
 
     user user do
       action :create
     end
 
-    directory config_dir do
+    directory config_dir do #/etc/redborder-social
       owner "root"
       group "root"
       mode 755
+      action :create
     end
 
-    resource = {}
-    resource["kafka_topic"] = kafka_topic
-    resource["hostname"] = hostname
-    resource["hostip"] = hostip
-    resource["community"] = community
-    resource["log_level"] = log_level
 
-    template "#{config_dir}/config.json" do
-      source "config.json.erb"
+    template "etc/rb-social/config.yml" do
+      source "rb-social_config.yml.erb"
+      cookbook "rbsocial"
       owner "root"
       group "root"
-      cookbook "rbsocial"
-      mode 0644
+      mode '0644'
       retries 2
-      variables(:resource => resource)
-      helpers Rbsocial::Helpers
-      notifies :restart, "service[redborder-social]", :delayed
+      notifies :restart, 'service[redborder-social]', :delayed
+    end
+
+    template "etc/rb-social/sysconfig" do
+      source "rb-social_sysconfig.erb"
+      owner "root"
+      group "root"
+      mode '0644'
+      retries 2
+      notifies :restart, 'service[redborder-social]', :delayed
     end
 
     service "redborder-social" do
       service_name "redborder-social"
-      supports :status => true, :restart => true, :start => true, :enable => true
+      ignore_failure true
+      supports :status => true, :reload => true, :restart => true
       action [:enable, :start]
     end
 
