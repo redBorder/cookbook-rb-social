@@ -3,8 +3,9 @@
 # Resource:: config
 #
 
-actions :add, :register, :deregister, :remove
+actions :add, :remove , :register, :deregister
 default_action :add
+
 
 attribute :config_dir, :kind_of => String, :default => "/etc/redborder-social"
 attribute :kafka_topic, :kind_of => String, :default => "rb_social"

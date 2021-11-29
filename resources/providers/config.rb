@@ -6,8 +6,8 @@
 action :add do
   begin
     config_dir = new_resource.config_dir
-    user = new.resource.user
 
+    Chef::Log.info("Instalando rb-social")
     yum_package "redborder-social" do
       action :upgrade
       flush_cache[:before]
@@ -24,8 +24,7 @@ action :add do
       action :create
     end
 
-
-    template "etc/rb-social/config.yml" do
+    template "etc/redborder-social/config.yml" do
       source "rb-social_config.yml.erb"
       cookbook "rbsocial"
       owner "root"
@@ -35,7 +34,7 @@ action :add do
       notifies :restart, 'service[redborder-social]', :delayed
     end
 
-    template "etc/rb-social/sysconfig" do
+    template "etc/redborder-social/sysconfig" do
       source "rb-social_sysconfig.erb"
       owner "root"
       group "root"
@@ -65,6 +64,46 @@ action :remove do
       action [:disable, :stop]
     end
     Chef::Log.info("cookbook redborder-social has been processed.")
+  rescue => e
+    Chef::Log.error(e.message)
+  end
+end
+
+
+action :register do #Usually used to register in consul
+  begin
+    if !node["rb-social"]["registered"]
+      query = {}
+      query["ID"] = "rb-social-#{node["hostname"]}"
+      query["Name"] = "rb-social"
+      query["Address"] = "#{node["ipaddress"]}"
+      query["Port"] = 443
+      json_query = Chef::JSONCompat.to_json(query)
+
+      execute 'Register service in consul' do
+        command "curl http://localhost:8500/v1/agent/service/register -d '#{json_query}' &>/dev/null"
+        action :nothing
+      end.run_action(:run)
+
+      node.set["rb-social"]["registered"] = true
+    end
+    Chef::Log.info("rb-social service has been registered in consul")
+  rescue => e
+    Chef::Log.error(e.message)
+  end
+end
+
+action :deregister do #Usually used to deregister from consul
+  begin
+    if node["rb-social"]["registered"]
+      execute 'Deregister service in consul' do
+        command "curl http://localhost:8500/v1/agent/service/deregister/rb-social-#{node["hostname"]} &>/dev/null"
+        action :nothing
+      end.run_action(:run)
+
+      node.set["rb-social"]["registered"] = false
+    end
+    Chef::Log.info("rb-social service has been deregistered from consul")
   rescue => e
     Chef::Log.error(e.message)
   end
