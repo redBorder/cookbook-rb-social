@@ -6,6 +6,8 @@
 action :add do
   begin
     config_dir = new_resource.config_dir
+    user = new_resource.user
+    group = new_resource.group
 
     Chef::Log.info("Instalando rb-social")
     yum_package "redborder-social" do
@@ -18,8 +20,8 @@ action :add do
     end
 
     directory config_dir do #/etc/redborder-social
-      owner "root"
-      group "root"
+      owner user
+      group group
       mode 755
       action :create
     end
