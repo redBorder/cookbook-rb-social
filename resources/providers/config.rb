@@ -6,38 +6,36 @@
 action :add do
   begin
     config_dir = new_resource.config_dir
-    user = new_resource.user
-    group = new_resource.group
+
 
     Chef::Log.info("Instalando rb-social")
     yum_package "redborder-social" do
       action :upgrade
       flush_cache[:before]
     end
-
-    user user do
-      action :create
-    end
-
+    Chef::Log.info("Creando dir")
     directory config_dir do #/etc/redborder-social
-      owner user
-      group group
-      mode 755
+      owner "root"
+      group "root"
+      mode '755'
       action :create
     end
-
-    template "etc/redborder-social/config.yml" do
+    Chef::Log.info("Creando config.yml")
+    template "/etc/redborder-social/config.yml" do
       source "rb-social_config.yml.erb"
       cookbook "rbsocial"
       owner "root"
       group "root"
       mode '0644'
       retries 2
+      variables( :zk_hosts => [], :nodes => social_nodes)
       notifies :restart, 'service[redborder-social]', :delayed
+      action :create
     end
 
-    template "etc/redborder-social/sysconfig" do
+    template "/etc/redborder-social/sysconfig" do
       source "rb-social_sysconfig.erb"
+      cookbook "rbsocial"
       owner "root"
       group "root"
       mode '0644'
