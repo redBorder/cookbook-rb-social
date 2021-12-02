@@ -28,7 +28,7 @@ action :add do
       group "root"
       mode '0644'
       retries 2
-      variables( :zk_hosts => [], :nodes => social_nodes)
+      variables( :zk_hosts => [], :nodes => [])
       notifies :restart, 'service[redborder-social]', :delayed
       action :create
     end
