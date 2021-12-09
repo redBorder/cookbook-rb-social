@@ -6,7 +6,7 @@
 action :add do
   begin
     config_dir = new_resource.config_dir
-
+    social_nodes = new_resource.social_nodes
 
     Chef::Log.info("Instalando rb-social")
     yum_package "redborder-social" do
@@ -28,7 +28,7 @@ action :add do
       group "root"
       mode '0644'
       retries 2
-      variables( :zk_hosts => [], :nodes => [])
+      variables( :zk_hosts => "", :nodes => social_nodes)
       notifies :restart, 'service[redborder-social]', :delayed
       action :create
     end
