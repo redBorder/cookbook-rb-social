@@ -1,9 +1,9 @@
 general:
   zk_connect: '<%= (!@zk_hosts.nil? and @zk_hosts!="") ?  @zk_hosts : "127.0.0.1:2181" %>'
 sensors:
-  <% @nodes.each do |x| %>
-  <% if !x["redborder"].nil? and !x["redborder"]["social"].nil? and x["redborder"]["parent_id"].nil? %>
-  <% if !x["redborder"]["social"]["twitter"].nil? and !x["redborder"]["social"]["twitter"]["consumer_key"].nil? and !x["redborder"]["social"]["twitter"]["consumer_secret"].nil? and !x["redborder"]["social"]["twitter"]["token_key"].nil? and !x["redborder"]["social"]["twitter"]["token_secret"].nil? and x["redborder"]["social"]["twitter"]["consumer_key"]!="" and x["redborder"]["social"]["twitter"]["consumer_secret"]!="" and x["redborder"]["social"]["twitter"]["token_key"]!="" and x["redborder"]["social"]["twitter"]["token_secret"]!=""  %>
+<% @nodes.each do |x| %>
+<% if !x["redborder"].nil? and !x["redborder"]["social"].nil? and x["redborder"]["parent_id"].nil? %>
+<% if !x["redborder"]["social"]["twitter"].nil? and !x["redborder"]["social"]["twitter"]["consumer_key"].nil? and !x["redborder"]["social"]["twitter"]["consumer_secret"].nil? and !x["redborder"]["social"]["twitter"]["token_key"].nil? and !x["redborder"]["social"]["twitter"]["token_secret"].nil? and x["redborder"]["social"]["twitter"]["consumer_key"]!="" and x["redborder"]["social"]["twitter"]["consumer_secret"]!="" and x["redborder"]["social"]["twitter"]["token_key"]!="" and x["redborder"]["social"]["twitter"]["token_secret"]!=""  %>
   - sensor_name: '<%= x["rbname"] %>'
     type: 'twitter'
     consumer_key: '<%= x["redborder"]["social"]["twitter"]["consumer_key"] %>'
@@ -12,39 +12,39 @@ sensors:
     token_secret: '<%= x["redborder"]["social"]["twitter"]["token_secret"] %>'
     enrichment:
       sensor_name: "<%= x["rbname"].nil? ? x.name : x["rbname"] %>"
-      <% ["sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "market", "market_uuid", "organization", "organization_uuid", "service_provider", "service_provider_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid" ].each do |ss| %>
-      <% if !x["redborder"][ss].nil? and x["redborder"][ss]!="" %>
+<% ["sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "market", "market_uuid", "organization", "organization_uuid", "service_provider", "service_provider_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid" ].each do |ss| %>
+<% if !x["redborder"][ss].nil? and x["redborder"][ss]!="" %>
       <%= ss %>: "<%= x["redborder"][ss] %>"
-    <% end %>
-    <% end %>
-    <% if !x["redborder"]["social"]["twitter"]["text_filters"].nil? and x["redborder"]["social"]["twitter"]["text_filters"].size>0 %>
+<% end %>
+<% end %>
+<% if !x["redborder"]["social"]["twitter"]["text_filters"].nil? and x["redborder"]["social"]["twitter"]["text_filters"].size>0 %>
     text_filter: [ <%= x["redborder"]["social"]["twitter"]["text_filters"].map{|x| "\"#{x.to_s}\"" }.join(", ") %> ]
-    <% end %>
-    <% if !x["redborder"]["social"]["location_filters"].nil? and x["redborder"]["social"]["location_filters"].size>0 %>
+<% end %>
+<% if !x["redborder"]["social"]["location_filters"].nil? and x["redborder"]["social"]["location_filters"].size>0 %>
     location_filter:
-      <% x["redborder"]["social"]["location_filters"].each do |x| %>
-      - ["<%= x["sw"][1] %>, <%= x["sw"][0] %>", "<%= x["ne"][1] %>, <%= x["ne"][0] %>"]
-  <% end %>
-  <% end %>
-  <% end %>
-  <% if !x["redborder"]["social"]["instagram"].nil? and !x["redborder"]["social"]["instagram"]["client_id"].nil? and !x["redborder"]["social"]["instagram"]["client_secret"].nil? and !x["redborder"]["social"]["instagram"]["client_id"].empty? and !x["redborder"]["social"]["instagram"]["client_secret"].empty? %>
+<% x["redborder"]["social"]["location_filters"].each do |x| %>
+         - ["<%= x["sw"][1] %>, <%= x["sw"][0] %>", "<%= x["ne"][1] %>, <%= x["ne"][0] %>"]
+<% end %>
+<% end %>
+<% end %>
+<% if !x["redborder"]["social"]["instagram"].nil? and !x["redborder"]["social"]["instagram"]["client_id"].nil? and !x["redborder"]["social"]["instagram"]["client_secret"].nil? and !x["redborder"]["social"]["instagram"]["client_id"].empty? and !x["redborder"]["social"]["instagram"]["client_secret"].empty? %>
   - sensor_name: '<%= x["rbname"] %>'
     type: 'instagram'
     client_id: '<%= x["redborder"]["social"]["instagram"]["client_id"] %>'
     client_secret: '<%= x["redborder"]["social"]["instagram"]["client_secret"] %>'
     enrichment:
       sensor_name: "<%= x["rbname"].nil? ? x.name : x["rbname"] %>"
-      <% ["sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "market", "market_uuid", "organization", "organization_uuid", "service_provider", "service_provider_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid" ].each do |ss| %>
-      <% if !x["redborder"][ss].nil? and x["redborder"][ss]!="" %>
+<% ["sensor_uuid", "deployment", "deployment_uuid", "namespace", "namespace_uuid", "market", "market_uuid", "organization", "organization_uuid", "service_provider", "service_provider_uuid", "campus", "campus_uuid", "building", "building_uuid", "floor", "floor_uuid" ].each do |ss| %>
+<% if !x["redborder"][ss].nil? and x["redborder"][ss]!="" %>
       <%= ss %>: "<%= x["redborder"][ss] %>"
-    <% end %>
-    <% end %>
-    <% if !x["redborder"]["social"]["location_filters"].nil? and x["redborder"]["social"]["location_filters"].size>0 %>
+<% end %>
+<% end %>
+<% if !x["redborder"]["social"]["location_filters"].nil? and x["redborder"]["social"]["location_filters"].size>0 %>
     location_filter:
-      <% x["redborder"]["social"]["location_filters"].each do |x| %>
-      - ["<%= x["sw"][1] %>, <%= x["sw"][0] %>", "<%= x["ne"][1] %>, <%= x["ne"][0] %>"]
-  <% end %>
-  <% end %>
-  <% end %>
-  <% end %>
-  <% end %>
+<% x["redborder"]["social"]["location_filters"].each do |x| %>
+         - ["<%= x["sw"][1] %>, <%= x["sw"][0] %>", "<%= x["ne"][1] %>, <%= x["ne"][0] %>"]
+<% end %>
+<% end %>
+<% end %>
+<% end %>
+<% end %>
