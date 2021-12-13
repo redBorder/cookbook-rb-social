@@ -8,19 +8,19 @@ action :add do
     config_dir = new_resource.config_dir
     social_nodes = new_resource.social_nodes
 
-    Chef::Log.info("Instalando rb-social")
-    yum_package "rb-social" do
+
+    yum_package "redborder-social" do
       action :upgrade
       flush_cache[:before]
     end
-    Chef::Log.info("Creando dir")
+
     directory config_dir do #/etc/redborder-social
       owner "root"
       group "root"
       mode '755'
       action :create
     end
-    Chef::Log.info("Creando config.yml")
+
     template "/etc/redborder-social/config.yml" do
       source "rb-social_config.yml.erb"
       cookbook "rbsocial"
