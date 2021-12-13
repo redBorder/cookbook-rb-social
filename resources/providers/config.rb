@@ -9,7 +9,7 @@ action :add do
     social_nodes = new_resource.social_nodes
 
     Chef::Log.info("Instalando rb-social")
-    yum_package "redborder-social" do
+    yum_package "rb-social" do
       action :upgrade
       flush_cache[:before]
     end
