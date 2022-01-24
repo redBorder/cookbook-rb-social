@@ -7,6 +7,7 @@ action :add do
   begin
     config_dir = new_resource.config_dir
     social_nodes = new_resource.social_nodes
+    memory = new_resource.memory
 
 
     yum_package "redborder-social" do
@@ -33,13 +34,14 @@ action :add do
       action :create
     end
 
-    template "/etc/redborder-social/sysconfig" do
+    template "/etc/sysconfig/redborder-social" do
       source "rb-social_sysconfig.erb"
       cookbook "rbsocial"
       owner "root"
       group "root"
       mode '0644'
       retries 2
+      variables(:memory => memory)
       notifies :restart, 'service[redborder-social]', :delayed
     end
 
