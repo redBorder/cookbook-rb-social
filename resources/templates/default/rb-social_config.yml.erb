@@ -2,7 +2,7 @@ general:
   zk_connect: '<%= (!@zk_hosts.nil? and @zk_hosts!="") ?  @zk_hosts : "127.0.0.1:2181" %>'
 sensors:
 <% @nodes.each do |x| %>
-<% if !x["redborder"].nil? and !x["redborder"]["social"].nil? and x["redborder"]["parent_id"].nil? %>
+<% if !x["redborder"].nil? and !x["redborder"]["social"].nil? %>
 <% if !x["redborder"]["social"]["twitter"].nil? and !x["redborder"]["social"]["twitter"]["consumer_key"].nil? and !x["redborder"]["social"]["twitter"]["consumer_secret"].nil? and !x["redborder"]["social"]["twitter"]["token_key"].nil? and !x["redborder"]["social"]["twitter"]["token_secret"].nil? and x["redborder"]["social"]["twitter"]["consumer_key"]!="" and x["redborder"]["social"]["twitter"]["consumer_secret"]!="" and x["redborder"]["social"]["twitter"]["token_key"]!="" and x["redborder"]["social"]["twitter"]["token_secret"]!=""  %>
   - sensor_name: '<%= x["rbname"] %>'
     type: 'twitter'

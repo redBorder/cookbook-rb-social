@@ -8,7 +8,7 @@ action :add do
     config_dir = new_resource.config_dir
     social_nodes = new_resource.social_nodes
     memory = new_resource.memory
-
+    zk_hosts = new_resource.zk_hosts
 
     yum_package "redborder-social" do
       action :upgrade
@@ -29,7 +29,7 @@ action :add do
       group "root"
       mode '0644'
       retries 2
-      variables( :zk_hosts => "", :nodes => social_nodes)
+      variables( :zk_hosts => zk_hosts, :nodes => social_nodes)
       notifies :restart, 'service[redborder-social]', :delayed
       action :create
     end
