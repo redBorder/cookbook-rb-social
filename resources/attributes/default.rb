@@ -1,4 +1,4 @@
 #default attributes
 #
 
-default["rb-social"]["registered"] = false
+default["redborder-social"]["registered"] = false
