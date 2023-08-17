@@ -74,10 +74,10 @@ end
 
 action :register do #Usually used to register in consul
   begin
-    if !node["rb-social"]["registered"]
+    if !node["redborder-social"]["registered"]
       query = {}
-      query["ID"] = "rb-social-#{node["hostname"]}"
-      query["Name"] = "rb-social"
+      query["ID"] = "redborder-social-#{node["hostname"]}"
+      query["Name"] = "redborder-social"
       query["Address"] = "#{node["ipaddress"]}"
       query["Port"] = 443
       json_query = Chef::JSONCompat.to_json(query)
@@ -87,9 +87,9 @@ action :register do #Usually used to register in consul
         action :nothing
       end.run_action(:run)
 
-      node.set["rb-social"]["registered"] = true
+      node.set["redborder-social"]["registered"] = true
     end
-    Chef::Log.info("rb-social service has been registered in consul")
+    Chef::Log.info("redborder-social service has been registered in consul")
   rescue => e
     Chef::Log.error(e.message)
   end
@@ -97,15 +97,15 @@ end
 
 action :deregister do #Usually used to deregister from consul
   begin
-    if node["rb-social"]["registered"]
+    if node["redborder-social"]["registered"]
       execute 'Deregister service in consul' do
-        command "curl http://localhost:8500/v1/agent/service/deregister/rb-social-#{node["hostname"]} &>/dev/null"
+        command "curl http://localhost:8500/v1/agent/service/deregister/redborder-social-#{node["hostname"]} &>/dev/null"
         action :nothing
       end.run_action(:run)
 
-      node.set["rb-social"]["registered"] = false
+      node.set["redborder-social"]["registered"] = false
     end
-    Chef::Log.info("rb-social service has been deregistered from consul")
+    Chef::Log.info("redborder-social service has been deregistered from consul")
   rescue => e
     Chef::Log.error(e.message)
   end
